@@ -3,11 +3,12 @@
 Experimental IQ radio taking the IQ samples from an audio in device (in stereo) and plays back the decoded audio (in mono) on the audio out device.
 
 Some intersting features :
-    - VFO control to a Flex Radio via TCP/IP
-    - Decodes USB, LSB, AM and FM
-    - Variable 100 .. 10000 Hz filter width
-    - Variable spectrum smoothing
-    - Selectable sample rates from 24000 to 192000 samples / sec
+
+- VFO control to a Flex Radio via TCP/IP
+- Decodes USB, LSB, AM and FM
+- Variable 100 .. 10000 Hz filter width
+- Variable spectrum smoothing
+- Selectable sample rates from 24000 to 192000 samples / sec
 
 ![Alt text](/screenshots/main.jpg)
 
