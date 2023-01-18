@@ -5,5 +5,5 @@
 /lib/
 /nbproject/
 /test/
-build.xml
-manifest.mf
+/build.xml
+/manifest.mf
