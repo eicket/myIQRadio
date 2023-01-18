@@ -26,11 +26,11 @@ The sampling rate after the decimation process is always 12000 samples/sec, inde
 The I signal is then delayed by ((Hilbert Transform taps - 1) / 2) samples to maintain a synchronized signal flow with the Q signal going through the Hilbert Transform.
 For USB, I minus Q produces the demodulated audio.
 For LSB, this is I plus Q.
-For AM and FM, the signals are calculated directly after the low pass filter.
+For AM and FM, the signals are calculated directly after the decimation.
 
-The IQ samples also go through a Fast Fourier Transform with a FFT size of 4096.
-A further decimation of 8, produces a 512 point spectrum graph and waterfall width.
-The line spectrum graph can finally be smoothed by accumulating up to 20 spectral lines, before being displayed in the line chart.
+The incoming IQ samples also go through a Fast Fourier Transform with a FFT size of 4096.
+A further decimation of 8, produces a 512 point spectrum graph and waterfall.
+The line spectrum graph can finally be smoothed by accumulating up to 20 spectral lines, before being displayed on the line chart.
 
 
 
