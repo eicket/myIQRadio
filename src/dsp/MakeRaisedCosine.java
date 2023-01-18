@@ -28,8 +28,7 @@ public class MakeRaisedCosine
             {
                 tempCoeffs[i] = sinc * cos;
             }
-
-            // Care because ( 1 - ( 2 * Math.pow((alpha * Fc * (i - nrOfTaps/2)),2))) is zero for 
+          
             if ((i - M / 2) == limit || (i - M / 2) == -limit)
             {
                 tempCoeffs[i] = 0.25 * Math.PI * sinc;

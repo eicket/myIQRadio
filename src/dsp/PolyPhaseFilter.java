@@ -33,7 +33,6 @@ public class PolyPhaseFilter
             }
 
             subFilters[subFilter] = new FirFilter(taps);
-
             subFilterSwitch = subFilterSwitch - 1;
         }
     }
