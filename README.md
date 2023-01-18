@@ -17,7 +17,7 @@ Some interesting features :
 
 All audio decoding takes place in the time domain following a well known diagram :
 
-![Alt text](/screenshots/demodulation.jpg)
+![Alt text](/screenshots/demod.jpg)
 
     public static final int FFTSIZE = 4096;
     public static final int SPECTRUM_DECIMATION_FACTOR = 8;
