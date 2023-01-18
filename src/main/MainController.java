@@ -41,7 +41,7 @@ import static common.Constants.YAXIS_MAX;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
-import signal.Demodulator;
+import dsp.Demodulator;
 import tcpip.client.FlexTCPThread;
 import static common.Constants.NR_OF_SPECTRUM_POINTS;
 

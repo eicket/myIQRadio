@@ -1,8 +1,6 @@
 // Erik Icket, ON4PB - 2023
-package signal;
+package dsp;
 
-import filters.Delay;
-import filters.HilbertTransform;
 import static common.Constants.AM;
 import static common.Constants.FFTSIZE;
 import java.util.logging.Logger;
@@ -10,7 +8,6 @@ import static common.Constants.FM;
 import static common.Constants.LSB;
 import static common.Constants.SAMPLE_AUDIO_OUT_RATE;
 import static common.Constants.USB;
-import filters.PolyPhaseFilter;
 import java.util.concurrent.TimeUnit;
 import static main.MainController.demodulationMode;
 import static main.MainController.filterCutoff;
@@ -107,7 +104,7 @@ public class Demodulator extends Thread
                                 break;
 
                             case FM:
-                                audioOut[i] = (int) (100 * (fmDemodulate(PPFilterOutI[i], PPFilterOutQ[i])));
+                                audioOut[i] = (int) (100 * (fmDemodulate(PPFilterOutI[i], PPFilterOutQ[i])));                              
                                 break;
 
                             case AM:
@@ -131,8 +128,8 @@ public class Demodulator extends Thread
 
     public double fmDemodulate(double currentI, double currentQ)
     {
-        double quadrature = currentI * previousQ + currentQ * previousI;
-        double inphase = currentI * previousI - currentQ * previousQ;
+        double inphase = currentI * previousI + currentQ * previousQ;
+        double quadrature = currentQ * previousI - currentI * previousQ;
 
         double angle = 0.0f;
 

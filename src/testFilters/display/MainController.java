@@ -8,8 +8,8 @@ import static common.Constants.FILTER_TAPS_HIGH;
 import static common.Constants.FILTER_TAPS_LOW;
 import fft.Complex;
 import testFilters.extra.BandPassFilter;
-import filters.HilbertTransform;
-import filters.PolyPhaseFilter;
+import dsp.HilbertTransform;
+import dsp.PolyPhaseFilter;
 import java.util.logging.Logger;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
@@ -24,7 +24,7 @@ import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.TextField;
 import javafx.scene.input.ScrollEvent;
 import javafx.util.Duration;
-import static filters.MakeRaisedCosine.makeRaisedCosine;
+import static dsp.MakeRaisedCosine.makeRaisedCosine;
 
 public class MainController
 {

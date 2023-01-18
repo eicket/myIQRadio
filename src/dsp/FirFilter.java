@@ -1,5 +1,5 @@
 // from https://ptolemy.berkeley.edu/eecs20/week12/implementation.html
-package filters;
+package dsp;
 
 public class FirFilter
 {

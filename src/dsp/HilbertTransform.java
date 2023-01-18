@@ -1,6 +1,6 @@
 // reworked from https://github.com/ac2cz/SDR
 // no licence test
-package filters;
+package dsp;
 
 import java.util.logging.Logger;
 

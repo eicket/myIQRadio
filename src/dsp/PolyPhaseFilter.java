@@ -1,8 +1,8 @@
 // Erik Icket, ON4PB - 2023
-package filters;
+package dsp;
 
 import java.util.logging.Logger;
-import static filters.MakeRaisedCosine.makeRaisedCosine;
+import static dsp.MakeRaisedCosine.makeRaisedCosine;
 
 public class PolyPhaseFilter
 {

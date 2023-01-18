@@ -15,50 +15,26 @@ Some interesting features :
 
 ## Some implementation details 
 
-All audio decoding takes place in the time domain following a well known diagram :
+All audio processing and demodulation takes place in the time domain following a well known diagram :
 
 ![Alt text](/screenshots/demod.jpg)
 
-    public static final int FFTSIZE = 4096;
-    public static final int SPECTRUM_DECIMATION_FACTOR = 8;
-    public static final int NR_OF_SPECTRUM_POINTS = FFTSIZE / SPECTRUM_DECIMATION_FACTOR;
-    public static final int NR_OF_WATERFALL_LINES = 100;
-    public static final int YAXIS_MAX = 200;
-    public static final int SAMPLE_AUDIO_OUT_RATE = 12000;
+The IQ samples first go through a low pass filter with a variable filter width, after which they are decimated by 4 (in the case of an input sampling rate of 48000 samples/sec).
+The low pass filtering and decimation is done with a polyphase filter bank with as many parallel FIR filters as the decimation rate.
+The sampling rate after the decimation process is always 12000 samples/sec, independent of the input sampling rate.
+
+The I signal is then delayed by ((Hilbert Transform taps - 1) / 2) samples to maintain a synchronized signal flow with the Q signal going through the Hilbert Transform.
+For USB, I minus Q produces the demodulated audio.
+For LSB, this is I plus Q.
+For AM and FM, the signals are calculated directly after the low pass filter.
+
+The IQ samples also go through a Fast Fourier Transform with a FFT size of 4096.
+A further decimation of 8, produces a 512 point spectrum graph and waterfall width.
+The line spectrum graph can finally be smoothed by accumulating up to 20 spectral lines, before being displayed in the line chart.
 
 
-## Gaussian smoothing (FT4/FT8)
 
-As per the protocol definition, all modes use a continuous phase frequency shift keying.
 
-FT4/FT8 frequency deviations are smoothed with a Gaussian filter. 
-A single Gaussian smoothed frequency deviation pulse is created according to equation (3) in [1] and then superposed on each symbol. 
-The length of the pulse is limited to a 3 symbol window and is superposed on the previous, current and next symbol.
-The frequency deviation, calculated as a phase angle, is calculated per sample with a raised-cosine ramp applied to the first and last symbol.
-
-The Gaussian-smoothed frequency deviation pulse has the following shape for FT4 (BT=1), FT8 (BT=2) and an almost rectangular frequency deviation (BT=99) :
-
-![Alt text](/screenshots/Pulse.jpg)
-
-The effect of the FT4 frequency deviation smoothing (BT=1) can be clearly observed, compared to a pure rectangular frequency deviation :
-
-![Alt text](/screenshots/FT4_frequency_deviation.jpg)
-
-The above diagram shows frequency deviations for symbols : 0, 1, 3, 2, 1, 0, 3, 1, 3, 0
-
-As for FT8, a milder smoothing is applied (BT=2) :
-
-![Alt text](/screenshots/FT8_frequency_deviation.jpg)
-
-The above diagram shows frequency deviations for symbols :  0, 1, 2, 2, 3, 4, 5, 7, 0, 6 
-
-## ft8code utility
-
-For FT8, the source-encoded message, 14-bit CRC, parity bits and channel symbols can be verified with the excellent FT8code.exe tool, packaged with the WSJTX app :
-
-C:\WSJT\wsjtx\bin>ft8code "FREE FRE FREE"
-
-Some comments in the code, refer to the output of this utility for a free text message with contents "FREE FRE FREE"
 
 ## Java environment
 

@@ -1,6 +1,6 @@
 // see https://dspguru.com/dsp/reference/raised-cosine-and-root-raised-cosine-formulas/
 // point 1.2 
-package filters;
+package dsp;
 
 public class MakeRaisedCosine
 {

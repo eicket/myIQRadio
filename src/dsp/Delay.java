@@ -1,5 +1,5 @@
 // Erik Icket, ON4PB - 2023
-package filters;
+package dsp;
 
 public class Delay
 {
