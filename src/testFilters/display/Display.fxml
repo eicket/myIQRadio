@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.chart.LineChart?>
+<?import javafx.scene.chart.NumberAxis?>
+<?import javafx.scene.control.ChoiceBox?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane maxHeight="-1.0" maxWidth="-1.0" prefHeight="900.0" prefWidth="1050.0" stylesheets="@Chart.css" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="testFilters.display.MainController">
+    <children>
+        <LineChart fx:id="tapsLineChart" animated="false" createSymbols="false" layoutX="20.0" layoutY="20.0" legendVisible="false" prefHeight="400.0" prefWidth="1000.0">
+            <xAxis>
+                <NumberAxis fx:id="tapsXAxis" autoRanging="false" label="filter coefficients" minorTickCount="10" minorTickLength="10.0" side="BOTTOM" tickLength="20.0" tickUnit="100.0" upperBound="1024.0" />
+            </xAxis>
+            <yAxis>
+                <NumberAxis fx:id="yAxis" lowerBound="-1.0" side="LEFT" tickLength="10.0" tickUnit="10.0" upperBound="1.0" />
+            </yAxis>
+        </LineChart>
+        <LineChart fx:id="filterLineChart" animated="false" createSymbols="false" layoutX="20.0" layoutY="420.0" legendVisible="false" prefHeight="400.0" prefWidth="1000.0">
+            <xAxis>
+                <NumberAxis fx:id="filterXAxis" autoRanging="false" label="filter" minorTickCount="100" minorTickLength="10.0" onScroll="#filterXAxisOnScroll" side="BOTTOM" tickLength="20.0" tickUnit="1000.0" upperBound="48000.0" />
+            </xAxis>
+            <yAxis>
+                <NumberAxis fx:id="yAxis1" lowerBound="-1.0" side="LEFT" tickLength="10.0" tickUnit="10.0" upperBound="1.0" />
+            </yAxis>
+        </LineChart>
+        <ChoiceBox fx:id="filterBox" layoutX="50.0" layoutY="830.0" prefWidth="200.0" />
+        <TextField fx:id="filterCutoffField" layoutX="300.0" layoutY="830.0" onScroll="#filterCutoffFieldScroll" prefWidth="80.0" />
+        <TextField fx:id="filterTapsField" layoutX="420.0" layoutY="830.0" onScroll="#filterTapsFieldScroll" prefWidth="80.0" />
+      <TextField fx:id="alphaField" layoutX="540.0" layoutY="830.0" onScroll="#alphaFieldScroll" prefWidth="80.0" />     
+    </children>
+</AnchorPane>
