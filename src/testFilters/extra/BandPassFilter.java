@@ -1,8 +1,8 @@
+// Erik Icket, ON4PB - 2023
 package testFilters.extra;
 
 public class BandPassFilter
 {
-
     public static void CalculateFilter(double[] filter, int cutFreq, int filterWidth, float sampleRate)
     {
         int M = filter.length - 1;

@@ -13,6 +13,7 @@ public class HilbertTransform
     private double[] delayLine;
     private double gain = 1;
     // M is only used in the filter proc !
+    // M is the filter order = nrOfTaps - 1
     private int M;
 
     public HilbertTransform(double sampleRate, int nrOfTaps)

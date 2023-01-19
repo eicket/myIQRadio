@@ -34,19 +34,18 @@ The line spectrum graph can finally be smoothed by accumulating up to 20 spectra
 
 ## Filter display utility 
 
-A filter display utility is also available to display filter coefficients and the frequency domain response. 
+A filter display utility is also available to display filter coefficients and the resulting frequency response. 
 
 ![Alt text](/screenshots/filter.jpg)
 
-Different types of filter can be selected (FIR filter, band pass filter, Hilbert transform, ...) and the impact of selected parameters (filter cutoff, number of taps, rolloff (alpha value)) can be visualised.
+Different types of parameters (filter cutoff, number of taps, rolloff - alpha value) can be selected for a number of filters (FIR filter, band pass filter, Hilbert transform, ...).
 
 
 ## Java environment
 
 This java application runs on all recent Java versions and was tested on Java 1.8, 15 and 17.
-The app is developed with NetBeans 12.6 and the project properties can be found in the nbproject folder.
 
-For all audio processing, the app uses the native javax library. So no external libraries, dll's .. are required.
+The app uses the native javax library for all audio processing. So no external libraries, dll's .. are required.
 
 The user interface is developed with JavaFX version 15. The GUI layout is defined in the Main.fxml file and can be edited by hand, or better, with the JavaFX SceneBuilder.
 
@@ -59,7 +58,7 @@ javafx.graphics.jar
 javafx.media.jar  
 javafx.swing.jar  
 javafx.web.jar  
-as well as charm-glisten-6.0.6.jar  
+commons-math3-3.6.1.jar
 
 The Java app can be started up as follows :
 java --module-path "{your path to Java FX}\openjfx-15.0.1_windows-x64_bin-sdk\javafx-sdk-15.0.1\lib" --add-modules javafx.controls,javafx.fxml -Djava.util.logging.config.file=console_logging.properties -jar "dist\myIQRadio.jar"

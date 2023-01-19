@@ -130,7 +130,6 @@ public class AudioOutThread extends Thread
                     // output to the soundcard                     
                     for (int i = 0; i < audioOutFromQueue.length; i++)
                     {
-                        // short out = (short) (200 * audioOutFromQueue[i]);
                         short out = (short) (audioOutFromQueue[i] * 10 * volume);
                         if ((out == Short.MAX_VALUE) || (out == Short.MIN_VALUE))
                         {

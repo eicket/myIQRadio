@@ -1,6 +1,4 @@
-/*
- * http://introcs.cs.princeton.edu/java/97data/Complex.java.html
- */
+// from http://introcs.cs.princeton.edu/java/97data/Complex.java.html
 package fft;
 
 /**

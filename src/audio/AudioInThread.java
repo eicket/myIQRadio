@@ -211,9 +211,7 @@ public class AudioInThread extends Thread
         float rate = nrOfSamples * FFTSIZE / elapsed;
 
         targetDataLine.stop();
-
         targetDataLine.close();
-
         logger.info("Exiting AudioInThread, sample rate : " + rate);
     }
 }

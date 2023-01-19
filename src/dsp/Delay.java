@@ -3,8 +3,9 @@ package dsp;
 
 public class Delay
 {
-    double[] delayLine;  
-    int nrOfTaps; 
+
+    private double[] delayLine;
+    private int nrOfTaps;
 
     public Delay(int nrOfTaps)
     {

@@ -71,7 +71,7 @@ public class MainController
     private int sampleRate = 0;
     private int audioDecimationRate = 0;
     private float binSize = 0;
-    float waterfallPixelWidthInHz = 0;
+   private float waterfallPixelWidthInHz = 0;
 
     private AudioInThread audioInThread;
     private AudioOutThread audioOutThread;
@@ -238,7 +238,7 @@ public class MainController
     @FXML
     void modeBoxAction(ActionEvent event)
     {
-        logger.info("mode changed to : " + modeBox.getValue());
+        logger.fine("mode changed to : " + modeBox.getValue());
 
         switch (modeBox.getValue())
         {
@@ -456,7 +456,6 @@ public class MainController
 
                         lineChart.setAnimated(false);
                         spectrumSeries.getData().clear();
-
                         for (int i = 0; i < spectrum.length; i++)
                         {
                             float average = 0;
@@ -472,8 +471,6 @@ public class MainController
                             spectrumSeries.getData().add(new XYChart.Data<Number, Number>(i * binSize * SPECTRUM_DECIMATION_FACTOR - sampleRate / 2, average));
                             logger.fine("added point, x : " + i * binSize * SPECTRUM_DECIMATION_FACTOR + ", y : " + spectrum[i]);
                         }
-
-                        logger.fine("new packet done");
                         lineChart.setAnimated(true);
 
                         // remove head of the queue if capacity is reached

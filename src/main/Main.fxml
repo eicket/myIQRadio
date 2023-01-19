@@ -10,24 +10,28 @@
 <?import javafx.scene.control.Tooltip?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane maxHeight="-1.0" maxWidth="-1.0" prefHeight="653.0" prefWidth="1117.0" stylesheets="@Chart.css" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.MainController">
+<AnchorPane maxHeight="-1.0" maxWidth="-1.0" prefHeight="660.0" prefWidth="1120.0" stylesheets="@Chart.css" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.MainController">
     <children>
         <ChoiceBox fx:id="audioInBox" layoutX="50.0" layoutY="569.0" prefWidth="300.0">
-         <tooltip>
-            <Tooltip text="Audio in device" />
-         </tooltip></ChoiceBox>
+            <tooltip>
+                <Tooltip text="Audio in device" />
+            </tooltip>
+        </ChoiceBox>
         <ChoiceBox fx:id="audioOutBox" layoutX="650.0" layoutY="569.0" prefWidth="300.0">
-         <tooltip>
-            <Tooltip text="Audio out device" />
-         </tooltip></ChoiceBox>
+            <tooltip>
+                <Tooltip text="Audio out device" />
+            </tooltip>
+        </ChoiceBox>
         <ChoiceBox fx:id="sampleRateBox" layoutX="510.0" layoutY="569.0" prefWidth="100.0">
-         <tooltip>
-            <Tooltip text="Sampling rate" />
-         </tooltip></ChoiceBox>
+            <tooltip>
+                <Tooltip text="Sampling rate" />
+            </tooltip>
+        </ChoiceBox>
         <ChoiceBox fx:id="modeBox" layoutX="270.0" layoutY="525.0" onAction="#modeBoxAction" prefWidth="80.0">
-         <tooltip>
-            <Tooltip text="Mode" />
-         </tooltip></ChoiceBox>
+            <tooltip>
+                <Tooltip text="Mode" />
+            </tooltip>
+        </ChoiceBox>
         <Button fx:id="RXButton" cancelButton="true" layoutX="1000.0" layoutY="569.0" mnemonicParsing="false" onMouseClicked="#RXButtonClicked" prefWidth="80.0" text="RX" />
         <Button fx:id="invertButton" cancelButton="true" layoutX="390.0" layoutY="569.0" mnemonicParsing="false" onMouseClicked="#invertButtonClicked" text="Invert I/Q" />
         <LineChart fx:id="lineChart" createSymbols="false" layoutX="20.0" layoutY="10.0" legendVisible="false" prefHeight="400.0" prefWidth="1077.0">
@@ -38,30 +42,36 @@
                 <NumberAxis fx:id="yAxis" autoRanging="false" onScroll="#yAxisOnScroll" side="LEFT" tickLength="10.0" tickUnit="10.0" upperBound="200.0" />
             </yAxis>
         </LineChart>
-      <Canvas fx:id="canvas" height="100.0" layoutX="62.0" layoutY="400.0" onMousePressed="#canvasMousePressed" width="1024.0" />
-      <TextField fx:id="frequencyField" layoutX="50.0" layoutY="525.0" onScroll="#frequencyFieldScroll" prefWidth="100.0">
-         <tooltip>
-            <Tooltip text="VFO" />
-         </tooltip></TextField>
-      <ChoiceBox fx:id="stepBox" layoutX="170.0" layoutY="525.0" prefWidth="80.0">
-         <tooltip>
-            <Tooltip text="VFO step" />
-         </tooltip></ChoiceBox>
-      <TextField fx:id="filterField" layoutX="390.0" layoutY="525.0" onScroll="#filterFieldScroll" prefWidth="80.0">
-         <tooltip>
-            <Tooltip text="Filter width" />
-         </tooltip></TextField>
-      <ChoiceBox fx:id="averageBox" layoutX="510.0" layoutY="525.0" prefWidth="60.0">
-         <tooltip>
-            <Tooltip text="Spectrum smoothing" />
-         </tooltip></ChoiceBox>
-      <Slider fx:id="rxGainSlider" blockIncrement="0.01" layoutX="50.0" layoutY="605.0" majorTickUnit="0.1" max="1.0" minorTickCount="1" onValueChange="#rxGainSliderValueChanged" prefHeight="40.0" prefWidth="300.0" showTickLabels="true" showTickMarks="true">
-         <tooltip>
-            <Tooltip text="Audio in gain" />
-         </tooltip></Slider>
-      <Slider fx:id="volumeSlider" blockIncrement="0.01" layoutX="650.0" layoutY="605.0" majorTickUnit="0.1" max="1.0" minorTickCount="1" onValueChange="#volumeSliderValueChanged" prefHeight="40.0" prefWidth="300.0" showTickLabels="true" showTickMarks="true" snapToTicks="true">
-         <tooltip>
-            <Tooltip text="Audio out gain" />
-         </tooltip></Slider>     
+        <Canvas fx:id="canvas" height="100.0" layoutX="62.0" layoutY="400.0" onMousePressed="#canvasMousePressed" width="1024.0" />
+        <TextField fx:id="frequencyField" layoutX="50.0" layoutY="525.0" onScroll="#frequencyFieldScroll" prefWidth="100.0">
+            <tooltip>
+                <Tooltip text="VFO" />
+            </tooltip>
+        </TextField>
+        <ChoiceBox fx:id="stepBox" layoutX="170.0" layoutY="525.0" prefWidth="80.0">
+            <tooltip>
+                <Tooltip text="VFO step" />
+            </tooltip>
+        </ChoiceBox>
+        <TextField fx:id="filterField" layoutX="390.0" layoutY="525.0" onScroll="#filterFieldScroll" prefWidth="80.0">
+            <tooltip>
+                <Tooltip text="Filter width" />
+            </tooltip>
+        </TextField>
+        <ChoiceBox fx:id="averageBox" layoutX="510.0" layoutY="525.0" prefWidth="60.0">
+            <tooltip>
+                <Tooltip text="Spectrum smoothing" />
+            </tooltip>
+        </ChoiceBox>
+        <Slider fx:id="rxGainSlider" blockIncrement="0.01" layoutX="50.0" layoutY="605.0" majorTickUnit="0.1" max="1.0" minorTickCount="1" onValueChange="#rxGainSliderValueChanged" prefHeight="40.0" prefWidth="300.0" showTickLabels="true" showTickMarks="true">
+            <tooltip>
+                <Tooltip text="Audio in gain" />
+            </tooltip>
+        </Slider>
+        <Slider fx:id="volumeSlider" blockIncrement="0.01" layoutX="650.0" layoutY="605.0" majorTickUnit="0.1" max="1.0" minorTickCount="1" onValueChange="#volumeSliderValueChanged" prefHeight="40.0" prefWidth="300.0" showTickLabels="true" showTickMarks="true" snapToTicks="true">
+            <tooltip>
+                <Tooltip text="Audio out gain" />
+            </tooltip>
+        </Slider>     
     </children>
 </AnchorPane>

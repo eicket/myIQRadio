@@ -27,6 +27,6 @@
         <ChoiceBox fx:id="filterBox" layoutX="50.0" layoutY="830.0" prefWidth="200.0" />
         <TextField fx:id="filterCutoffField" layoutX="300.0" layoutY="830.0" onScroll="#filterCutoffFieldScroll" prefWidth="80.0" />
         <TextField fx:id="filterTapsField" layoutX="420.0" layoutY="830.0" onScroll="#filterTapsFieldScroll" prefWidth="80.0" />
-      <TextField fx:id="alphaField" layoutX="540.0" layoutY="830.0" onScroll="#alphaFieldScroll" prefWidth="80.0" />     
+        <TextField fx:id="alphaField" layoutX="540.0" layoutY="830.0" onScroll="#alphaFieldScroll" prefWidth="80.0" />     
     </children>
 </AnchorPane>

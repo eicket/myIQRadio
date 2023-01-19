@@ -1,3 +1,4 @@
+// Erik Icket, ON4PB - 2023
 package testFilters.display;
 
 import com.github.psambit9791.jdsp.filter.FIRWin1;
@@ -33,15 +34,15 @@ public class MainController
 
     private double samplingRate = 48000;
     private int filterCutoff = FILTER_DEFAULT;
-    int taps = 512;
+    private int taps = 512;
     private int LowPasswidth = 200;
     private int BandPasswidth = 1000;
     private double alpha = 0.5;
     private int decimationRate = 4;
     private double[] coefficients = getPolyPhaseCoefficients(filterCutoff, taps);
 
-    XYChart.Series<Number, Number> coefficientsPoints = new XYChart.Series<>();
-    XYChart.Series<Number, Number> firPoints = new XYChart.Series<>();
+    private XYChart.Series<Number, Number> coefficientsPoints = new XYChart.Series<>();
+    private XYChart.Series<Number, Number> firPoints = new XYChart.Series<>();
     private Timeline timeline;
 
     @FXML
@@ -156,8 +157,7 @@ public class MainController
             }
         }
 
-    //    alphaField.setText(Double.toString(alpha));
-          alphaField.setText(String.format("%.2f", alpha));
+        alphaField.setText(String.format("%.2f", alpha));
     }
 
     @FXML
@@ -172,7 +172,7 @@ public class MainController
 
         filterCutoffField.setText(Integer.toString(filterCutoff));
         filterTapsField.setText(Integer.toString(taps));
-         alphaField.setText(Double.toString(alpha));
+        alphaField.setText(Double.toString(alpha));
 
         timeline = new Timeline();
         timeline.getKeyFrames().add(new KeyFrame(Duration.millis(500), new EventHandler<ActionEvent>()

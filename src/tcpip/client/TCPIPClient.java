@@ -15,9 +15,9 @@ public class TCPIPClient
 
     static final Logger logger = Logger.getLogger(TCPIPClient.class.getName());
 
-    Socket socket;
-    PrintWriter out;
-    BufferedReader in;
+    private Socket socket;
+    private PrintWriter out;
+    private BufferedReader in;
 
     public boolean open(String host, int port)
     {
@@ -50,8 +50,11 @@ public class TCPIPClient
         try
         {
             // in case tcpip connection is not open
-            if (in == null) return "";
-            
+            if (in == null)
+            {
+                return "";
+            }
+
             String inputLine = in.readLine();
             if (inputLine != null)
             {

@@ -11,7 +11,7 @@ public class PropertiesWrapper
 {
 
     static final Logger logger = Logger.getLogger(PropertiesWrapper.class.getName());
-    Properties prop;
+    private Properties prop;
 
     public PropertiesWrapper()
     {

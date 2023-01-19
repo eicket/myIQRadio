@@ -104,7 +104,7 @@ public class Demodulator extends Thread
                                 break;
 
                             case FM:
-                                audioOut[i] = (int) (100 * (fmDemodulate(PPFilterOutI[i], PPFilterOutQ[i])));                              
+                                audioOut[i] = (int) (100 * (fmDemodulate(PPFilterOutI[i], PPFilterOutQ[i])));
                                 break;
 
                             case AM:
@@ -128,15 +128,19 @@ public class Demodulator extends Thread
 
     public double fmDemodulate(double currentI, double currentQ)
     {
-        double inphase = currentI * previousI + currentQ * previousQ;
+        double inphase = currentI * previousI + currentQ * -previousQ;
         double quadrature = currentQ * previousI - currentI * previousQ;
 
         double angle = 0.0f;
 
-        // check for divide by zero
+        // prevent divide by zero
         if (inphase != 0)
         {
             angle = FastMath.atan(quadrature / inphase);
+        }
+        else
+        {
+            angle = FastMath.atan(quadrature / Float.MIN_VALUE);
         }
 
         previousI = currentI;

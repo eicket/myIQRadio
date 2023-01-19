@@ -1,4 +1,4 @@
-// Erik Icket, ON4PB - 2022
+// Erik Icket, ON4PB - 2023
 package testFilters.display;
 
 import javafx.application.Application;
@@ -15,9 +15,7 @@ public class Start extends Application
     public void start(Stage stage) throws Exception
     {
         Parent root = FXMLLoader.load(getClass().getResource("Display.fxml"));
-
         Scene scene = new Scene(root);
-
         stage.setScene(scene);
         stage.setTitle("myFilterDisplay by ON4PB");
         stage.show();
