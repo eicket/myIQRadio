@@ -4,6 +4,7 @@
 <?import javafx.scene.chart.NumberAxis?>
 <?import javafx.scene.control.ChoiceBox?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.Tooltip?>
 <?import javafx.scene.layout.AnchorPane?>
 
 <AnchorPane maxHeight="-1.0" maxWidth="-1.0" prefHeight="900.0" prefWidth="1050.0" stylesheets="@Chart.css" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="testFilters.display.MainController">
@@ -25,8 +26,17 @@
             </yAxis>
         </LineChart>
         <ChoiceBox fx:id="filterBox" layoutX="50.0" layoutY="830.0" prefWidth="200.0" />
-        <TextField fx:id="filterCutoffField" layoutX="300.0" layoutY="830.0" onScroll="#filterCutoffFieldScroll" prefWidth="80.0" />
-        <TextField fx:id="filterTapsField" layoutX="420.0" layoutY="830.0" onScroll="#filterTapsFieldScroll" prefWidth="80.0" />
-        <TextField fx:id="alphaField" layoutX="540.0" layoutY="830.0" onScroll="#alphaFieldScroll" prefWidth="80.0" />     
+        <TextField fx:id="filterCutoffField" layoutX="300.0" layoutY="830.0" onScroll="#filterCutoffFieldScroll" prefWidth="80.0">
+         <tooltip>
+            <Tooltip text="Filter cutoff" />
+         </tooltip></TextField>
+        <TextField fx:id="filterTapsField" layoutX="420.0" layoutY="830.0" onScroll="#filterTapsFieldScroll" prefWidth="80.0">
+         <tooltip>
+            <Tooltip text="Number of taps" />
+         </tooltip></TextField>
+        <TextField fx:id="alphaField" layoutX="540.0" layoutY="830.0" onScroll="#alphaFieldScroll" prefWidth="80.0">
+         <tooltip>
+            <Tooltip text="Rolloff" />
+         </tooltip></TextField>     
     </children>
 </AnchorPane>
