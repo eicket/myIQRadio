@@ -1,7 +1,6 @@
 // Erik Icket, ON4PB - 2023
 package testFilters.display;
 
-import com.github.psambit9791.jdsp.filter.FIRWin1;
 import static common.Constants.FILTER_DEFAULT;
 import static common.Constants.FILTER_LIMIT_HIGH;
 import static common.Constants.FILTER_LIMIT_LOW;
@@ -167,7 +166,7 @@ public class MainController
         tapsXAxis.setUpperBound(taps);
         filterLineChart.getData().add(firPoints);
 
-        filterBox.getItems().addAll("Polyphase filter", "Fir filter", "Fir Win1 LPF", "Band pass filter", "Hilbert transform");
+        filterBox.getItems().addAll("Polyphase filter", "Fir filter", "Band pass filter", "Hilbert transform");
         filterBox.setValue("Polyphase filter");
 
         filterCutoffField.setText(Integer.toString(filterCutoff));
@@ -188,10 +187,7 @@ public class MainController
                         break;
                     case "Fir filter":
                         coefficients = getFirCoefficients(filterCutoff, taps);
-                        break;
-                    case "Fir Win1 LPF":
-                        coefficients = getFirWin1Coefficients(filterCutoff, taps);
-                        break;
+                        break;                 
                     case "Band pass filter":
                         coefficients = getBandPassCoefficients(filterCutoff, taps);
                         break;
@@ -245,19 +241,7 @@ public class MainController
         double[] Coefficients = makeRaisedCosine(samplingRate, iCutoff, alpha, taps);
         logger.fine("Fir filter coeefs size : " + Coefficients.length);
         return Coefficients;
-    }
-
-    double[] getFirWin1Coefficients(int iCutoff, int taps)
-    {
-        double[] dCutoff =
-        {
-            iCutoff
-        };
-        FIRWin1 fw = new FIRWin1(taps, LowPasswidth, samplingRate);
-        double[] Coefficients = fw.computeCoefficients(dCutoff, FIRWin1.FIRfilterType.LOWPASS, true);
-        logger.fine("FirWin1 filter coeefs size : " + Coefficients.length);
-        return Coefficients;
-    }
+    }    
 
     double[] getBandPassCoefficients(int iCutoff, int taps)
     {

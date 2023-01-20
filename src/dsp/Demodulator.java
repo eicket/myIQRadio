@@ -14,7 +14,6 @@ import static main.MainController.filterCutoff;
 import static main.MainController.lbdAudioOut;
 import static main.MainController.lbdDemodulatorInput;
 import static main.MainController.rxGain;
-import org.apache.commons.math3.util.FastMath;
 
 public class Demodulator extends Thread
 {
@@ -128,21 +127,22 @@ public class Demodulator extends Thread
 
     public double fmDemodulate(double currentI, double currentQ)
     {
-        double inphase = currentI * previousI + currentQ * -previousQ;
-        double quadrature = currentQ * previousI - currentI * previousQ;
-
+        double IDemodulated = currentI * previousI + currentQ * previousQ;
+        double QDemodulated = currentQ * previousI - currentI * previousQ;
         double angle = 0.0f;
 
+        // The atan() function returns a value in the range -π/2 to π/2 radians. The atan2() function returns a value in the range -π to π radians.
         // prevent divide by zero
-        if (inphase != 0)
+        if (IDemodulated != 0)
         {
-            angle = FastMath.atan(quadrature / inphase);
+            // angle = Math.atan(QDemodulated / IDemodulated);
+            angle = Math.atan2(QDemodulated, IDemodulated);
         }
         else
         {
-            angle = FastMath.atan(quadrature / Float.MIN_VALUE);
+            angle = Math.atan2(QDemodulated, Double.MIN_VALUE);
         }
-
+        
         previousI = currentI;
         previousQ = currentQ;
 

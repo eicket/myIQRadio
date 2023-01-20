@@ -367,7 +367,7 @@ public class MainController
     private void rxGainSliderValueChanged(ObservableValue<Number> ovn, Number before, Number after)
     {
         logger.fine(before + " " + after);
-        rxGain = (double) after;
+        rxGain = (double) after;        
     }
 
     @FXML
