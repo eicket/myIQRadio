@@ -1,7 +1,7 @@
 # myIQRadio
 
 Experimental Software Defined Radio (SDR) taking the IQ samples from an audio in device (in stereo) and plays back the decoded audio (in mono) on the audio out device.
-When using with a Flex Radio, setup a single DAX IQ Channel in the SmartSDR DAX Control Panel, and select this device as input to this app.
+When using with a Flex Radio, setup a single DAX IQ Channel in the SmartSDR DAX Control Panel, and select this IQ channel as input to this app.
 
 This is a pure Java implementation, and can easily be rebuilt in any regular Java development environment.
 
