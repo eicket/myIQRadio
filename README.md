@@ -1,11 +1,13 @@
 # myIQRadio
 
-Experimental IQ radio taking the IQ samples from an audio in device (in stereo) and plays back the decoded audio (in mono) on the audio out device.
+Experimental Software Defined Radio (SDR) taking the IQ samples from an audio in device (in stereo) and plays back the decoded audio (in mono) on the audio out device.
+When using with a Flex Radio, setup a single DAX IQ Channel in the SmartSDR DAX Control Panel, and select this device as input to this app.
+
+This is a pure Java implementation, and can easily be rebuilt in any regular Java development environment.
 
 Some interesting features :
 
 - Selectable sample rates from 24000 to 192000 samples / sec
-
 - Decodes USB, LSB, AM and FM
 - Variable 100 .. 10000 Hz filter width
 - Variable spectrum smoothing
