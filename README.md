@@ -58,7 +58,6 @@ javafx.graphics.jar
 javafx.media.jar  
 javafx.swing.jar  
 javafx.web.jar  
-commons-math3-3.6.1.jar
 
 The Java app can be started up as follows :
 java --module-path "{your path to Java FX}\openjfx-15.0.1_windows-x64_bin-sdk\javafx-sdk-15.0.1\lib" --add-modules javafx.controls,javafx.fxml -Djava.util.logging.config.file=console_logging.properties -jar "dist\myIQRadio.jar"
