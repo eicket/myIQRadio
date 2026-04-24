@@ -1,7 +1,10 @@
 # myIQRadio
 
-Experimental Software Defined Radio (SDR) taking the IQ samples from an audio in device (in stereo) and plays back the decoded audio (in mono) on the audio out device.
-When using with a Flex Radio, setup a single DAX IQ Channel in the SmartSDR DAX Control Panel, and select this IQ channel as input to this app.
+Experimental Software Defined Radio (SDR) taking the IQ samples from A VITA49 stream and plays back the decoded audio (in mono) on the audio out device.
+No audio devices are used. The DAX control panel is completely bypassed, and can be left closed.
+The IQ sampling can be done at 24000, 48000, 96000 or 192000 samples per second and are carried as IQ pairs encoded in float32.
+
+When using with a Flex Radio, slect a pan adapter, and select DAX IQ channel 1.
 
 This is a pure Java implementation, and can easily be rebuilt in any regular Java development environment.
 
@@ -45,25 +48,12 @@ Different types of parameters (filter cutoff, number of taps, rolloff - alpha va
 
 ## Java environment
 
-This java application runs on all recent Java versions and was tested on Java 1.8, 15 and 17.
+This java application runs on all recent Java versions and was tested on Java 25.
 
 The app uses the native javax library for all audio processing. So no external libraries, dll's .. are required.
 
-The user interface is developed with JavaFX version 15. The GUI layout is defined in the Main.fxml file and can be edited by hand, or better, with the JavaFX SceneBuilder.
-
-In your IDE, make sure that the following jar files are on the project classpath :  
-javafx-swt.jar  
-javafx.base.jar  
-javafx.controls.jar  
-javafx.fxml.jar  
-javafx.graphics.jar  
-javafx.media.jar  
-javafx.swing.jar  
-javafx.web.jar  
-
-The Java app can be started up as follows :
-java --module-path "{your path to Java FX}\openjfx-15.0.1_windows-x64_bin-sdk\javafx-sdk-15.0.1\lib" --add-modules javafx.controls,javafx.fxml -Djava.util.logging.config.file=console_logging.properties -jar "dist\myIQRadio.jar"
-
+A pom.xml file is included for building and packaging.
+The user interface is developed with JavaFX version 25. The GUI layout is defined in the Main.fxml file and can be edited by hand, or better, with the JavaFX SceneBuilder.
 
 Give it a try, and if you like it, give it a good fork !
 73's  

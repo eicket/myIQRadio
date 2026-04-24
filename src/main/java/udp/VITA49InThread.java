@@ -82,7 +82,7 @@ public class VITA49InThread extends Thread
             sendRaw("stream set 0x" + sStreamId + " daxiq_rate=" + sampleRate);
             sendRaw("display pan set " + panId + " daxiq_channel=1");
             sendRaw("stream get_error 0x" + sStreamId);
-            // getthe center pan frequency 
+            // get the center pan frequency 
             sendRaw("sub pan all");
             // Pan 0 uses the handle 0x40000000, and Pan 1 uses 0x40000001
 
@@ -111,6 +111,7 @@ public class VITA49InThread extends Thread
                 int length = packet.getLength();
                 int offset = 0;
 
+                // https://github.com/ten9876/AetherSDR/blob/main/docs/vita49-format.md
                 // ---- Word 0: packet type, indicators, sequence, 4 bytes
                 int word0 = readInt(data, offset);
                 offset += 4;
