@@ -1,10 +1,10 @@
 # myIQRadio
 
-Experimental Software Defined Radio (SDR) taking the IQ samples from A VITA49 stream and plays back the decoded audio (in mono) on the audio out device.
-No audio devices are used. The DAX control panel is completely bypassed, and can be left closed.
-The IQ sampling can be done at 24000, 48000, 96000 or 192000 samples per second and are carried as IQ pairs encoded in float32.
+Experimental Software Defined Radio (SDR) client which reads the IQ samples from a Flex Radio VITA49 stream and plays back the decoded audio (in mono) on the audio out device.
+No audio devices are used for reading the sampled IQ stream. The DAX control panel is completely bypassed, and can be left closed.
+The IQ sampling can be done at 24000, 48000, 96000 or 192000 samples per second and samples are carried as 32-bit float little-endian interleaved I/Q pairs.
 
-When using with a Flex Radio, slect a pan adapter, and select DAX IQ channel 1.
+When using with a Flex Radio, select a pan adapter, and attach DAX IQ channel 1 to it.
 
 This is a pure Java implementation, and can easily be rebuilt in any regular Java development environment.
 
