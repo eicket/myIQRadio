@@ -111,21 +111,37 @@ public class VITA49InThread extends Thread
                 int length = packet.getLength();
                 int offset = 0;
 
+                // dump 28 bytes header - dax
+                // header bytes: 38 50 01 07 04 00 00 08 00 00 1C 2D 53 4C 03 E3 A5 A5 A0 A5 5F 71 39 1D A5 A5 A0 A5 
+                // daxiq
+                // header bytes: 1C 51 04 08 20 00 00 00 00 00 1C 2D 53 4C 02 E4 69 EC 60 F8 00 00 00 00 00 00 00 01
+                StringBuilder sb = new StringBuilder("header bytes: ");
+                for (int i = 0; i < 28; i++)
+                {
+                    sb.append(String.format("%02X ", data[i] & 0xFF));
+                }
+                logger.debug(sb.toString());
+
+                // header is always 28 bytes
                 // https://github.com/ten9876/AetherSDR/blob/main/docs/vita49-format.md
                 // ---- Word 0: packet type, indicators, sequence, 4 bytes
                 int word0 = readInt(data, offset);
                 offset += 4;
-                int hasStreamId = (word0 >> 27) & 0x1;
-                int hasClassId = (word0 >> 26) & 0x1;
+
+                int pktType = (word0 >> 28) & 0xF;
+                int hasClassId = (word0 >> 27) & 0x1;   // C flag
+                int hasTrailer = (word0 >> 26) & 0x1;   // T flag
+                boolean hasStreamId = (pktType & 0x1) != 0;  // types 1,3,5 always have stream ID
                 int pktSeq = (word0 >> 16) & 0xF;
                 int tsiType = (word0 >> 22) & 0x3;   // 0=none,1=UTC,2=GPS,3=other
                 int tsfType = (word0 >> 20) & 0x3;   // 0=none,1=samples,2=real-time ps,3=free-running
 
-                logger.debug(String.format("Word0 : seq=%d hasStreamId=%d hasClassId=%d TSI=%d TSF=%d", pktSeq, hasStreamId, hasClassId, tsiType, tsfType));
+                // Word0 : seq=10 hasStreamId=true hasClassId=1 TSI=1 TSF=1
+                logger.debug(String.format("Word0 : seq=%d hasStreamId=%b hasClassId=%d TSI=%d TSF=%d", pktSeq, hasStreamId, hasClassId, tsiType, tsfType));
 
                 // ---- Stream ID, 4 bytes
                 int pktStreamId = 0;
-                if (hasStreamId == 1)
+                if (hasStreamId)
                 {
                     pktStreamId = readInt(data, offset);
                     sPktStreamId = String.format(
@@ -138,6 +154,13 @@ public class VITA49InThread extends Thread
                     offset += 4;
                 }
 
+                /*
+                Word0 : seq=0 hasStreamId=true hasClassId=1 TSI=1 TSF=1
+                streamId in packet : 04 00 00 08, streamId : 04000008
+                Class ID : OUI=0x001C2D InfoClass=0x534C PktClass=0x03E3
+                
+                -> PCC : Packet Class Code : 03E3 : RX audio (uncompressed), float32 stereo, big-endian 
+                 */
                 if (pktStreamId == streamId)
                 {
                     // ---- Class ID (optional, 8 bytes)
@@ -244,9 +267,11 @@ public class VITA49InThread extends Thread
                     }
                     lastSeq = pktSeq;
 
-                    int payloadBytes = length - offset;
+                    // subtract 4 for trailer, which is not used
+                    int payloadBytes = length - offset - (hasTrailer == 1 ? 4 : 0);
                     int samples = payloadBytes / 8;
-                    logger.debug(String.format("Payload : length=%d offset=%d payloadBytes=%d samples=%d packetSequence=%d", length, offset, payloadBytes, samples, pktSeq));
+                    logger.debug(String.format("Datagram packet length=%d header=%d payloadBytes=%d samples=%d packetSequence=%d", length, offset, payloadBytes, samples, pktSeq));
+                    // Datagram packet length=4128 header=28 payloadBytes=4096 samples=512 packetSequence=8
 
                     for (int i = 0; i < samples; i++)
                     {
@@ -256,10 +281,10 @@ public class VITA49InThread extends Thread
 
                         // Optional normalization (adjust if needed)                        
                         float scale = 1.0f / 100.0f;  // tune this
-
                         if (processIQ)
                         {
                             processIQ(iSample * scale, qSample * scale);
+                            //processIQ(iSample, qSample);
                             logger.debug("I: " + iSample + " Q: " + qSample);
                         }
                         offset += 8;

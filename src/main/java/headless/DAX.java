@@ -1,4 +1,4 @@
-package test;
+package headless;
 
 import common.Constants;
 import static common.Constants.FFTSIZE;
@@ -10,7 +10,6 @@ import java.math.BigDecimal;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.SocketTimeoutException;
-import java.time.Instant;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import javax.sound.sampled.AudioFormat;
@@ -34,8 +33,6 @@ public class DAX
     public boolean stopRequest = false;
 
     PropertiesWrapper propWrapper = new PropertiesWrapper();
-    private static final DateTimeFormatter TS_FMT = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS 'UTC'").withZone(ZoneOffset.UTC);
-
     public boolean connected = false;
     private final int udpPort = 4050;
 
@@ -94,25 +91,17 @@ public class DAX
 
             try
             {
-                /*
-                AudioFormat format = new AudioFormat(
-                        48000, // matches FlexRadio DAX rate
-                        16,
-                        1, // mono for WSJT-X
-                        true, // signed
-                        true // little-endian
-                );*/
                 AudioFormat format = new AudioFormat(
                         24000, // matches FlexRadio DAX rate
                         16,
                         1,
                         true, // signed
-                        false // not big endian
+                        false // little endian 
                 );
 
                 DataLine.Info info = new DataLine.Info(SourceDataLine.class, format);
                 audioOut = (SourceDataLine) AudioSystem.getLine(info);
-                audioOut.open(format, 24000 * 2 * 1);  // 1 second buffer
+                audioOut.open(format, 1024);
                 audioOut.start();
             }
             catch (LineUnavailableException ex)
@@ -137,13 +126,12 @@ public class DAX
 
         int lastSeq = -1;
         String sPktStreamId = "";
-           byte[] out ;
+        byte[] out;
 
         while (!stopRequest)
         {
             try
             {
-
                 try
                 {
                     socket.receive(packet);
@@ -152,20 +140,35 @@ public class DAX
                     int length = packet.getLength();
                     int offset = 0;
 
+                    // dump 28 bytes header
+                    // header bytes: 38 50 01 07 04 00 00 08 00 00 1C 2D 53 4C 03 E3 A5 A5 A0 A5 5F 71 39 1D A5 A5 A0 A5 
+                    StringBuilder sb = new StringBuilder("header bytes: ");
+                    for (int i = 0; i < 28; i++)
+                    {
+                        sb.append(String.format("%02X ", data[i] & 0xFF));
+                    }
+                    logger.debug(sb.toString());
+
+                    // header is always 28 bytes
+                    // https://github.com/ten9876/AetherSDR/blob/main/docs/vita49-format.md
                     // ---- Word 0: packet type, indicators, sequence, 4 bytes
                     int word0 = readInt(data, offset);
                     offset += 4;
-                    int hasStreamId = (word0 >> 27) & 0x1;
-                    int hasClassId = (word0 >> 26) & 0x1;
+
+                    int pktType = (word0 >> 28) & 0xF;
+                    int hasClassId = (word0 >> 27) & 0x1;   // C flag
+                    int hasTrailer = (word0 >> 26) & 0x1;   // T flag
+                    boolean hasStreamId = (pktType & 0x1) != 0;  // types 1,3,5 always have stream ID
                     int pktSeq = (word0 >> 16) & 0xF;
                     int tsiType = (word0 >> 22) & 0x3;   // 0=none,1=UTC,2=GPS,3=other
                     int tsfType = (word0 >> 20) & 0x3;   // 0=none,1=samples,2=real-time ps,3=free-running
 
-                    logger.info(String.format("Word0 : seq=%d hasStreamId=%d hasClassId=%d TSI=%d TSF=%d", pktSeq, hasStreamId, hasClassId, tsiType, tsfType));
+                    // Word0 : seq=8 hasStreamId=true hasClassId=1 TSI=1 TSF=1
+                    logger.debug(String.format("Word0 : seq=%d hasStreamId=%b hasClassId=%d TSI=%d TSF=%d", pktSeq, hasStreamId, hasClassId, tsiType, tsfType));
 
                     // ---- Stream ID, 4 bytes
                     int pktStreamId = 0;
-                    if (hasStreamId == 1)
+                    if (hasStreamId)
                     {
                         pktStreamId = readInt(data, offset);
                         sPktStreamId = String.format(
@@ -174,104 +177,31 @@ public class DAX
                                 buffer[offset + 1],
                                 buffer[offset + 2],
                                 buffer[offset + 3]);
+                        // streamId in packet : 04 00 00 08, streamId : 04000008
                         logger.debug("streamId in packet : " + sPktStreamId + ", streamId : " + sStreamId);
                         offset += 4;
                     }
 
+                    /*
+                    Word0 : seq=0 hasStreamId=true hasClassId=1 TSI=1 TSF=1
+                    streamId in packet : 04 00 00 08, streamId : 04000008
+                    Class ID : OUI=0x001C2D InfoClass=0x534C PktClass=0x03E3
+                    -> PCC : Packet Class Code : 03E3 : RX audio (uncompressed), float32 stereo, big-endian 
+                     */
                     if (pktStreamId == streamId)
                     {
-
                         // ---- Class ID (optional, 8 bytes)
                         if (hasClassId == 1)
                         {
                             int classHigh = readInt(data, offset);      // padding + OUI
                             int classLow = readInt(data, offset + 4);  // info class + packet class
+                            // Class ID : OUI=0x001C2D InfoClass=0x534C PktClass=0x03E3
                             logger.debug(String.format("Class ID : OUI=0x%06X InfoClass=0x%04X PktClass=0x%04X", classHigh & 0x00FFFFFF, (classLow >> 16) & 0xFFFF, classLow & 0xFFFF));
                             offset += 8;
                         }
 
-                        // The timestamp integer-seconds field in VITA-49 is Unix epoch (seconds since 1970-01-01 UTC), so you can convert it directly with Instant:
-                        // FlexRadio DAX IQ typically uses TSI=1 (UTC) and TSF=1 (sample count since epoch), so you'll most likely see the second format — a clean UTC wall time plus a sample offset.
-                        // ---- Timestamp
-                        // Integer-seconds field: present if TSI != 0 (4 bytes)
-                        // Fractional-seconds field: present if TSF != 0 (8 bytes)
-                        long tsIntSeconds = 0;
-                        long tsFractional = 0;
-
-                        if (tsiType != 0)
-                        {
-                            tsIntSeconds = readInt(data, offset) & 0xFFFFFFFFL;
-                            offset += 4;
-                        }
-                        if (tsfType != 0)
-                        {
-                            long hi = readInt(data, offset) & 0xFFFFFFFFL;
-                            long lo = readInt(data, offset + 4) & 0xFFFFFFFFL;
-                            tsFractional = (hi << 32) | lo;
-                            offset += 8;
-                        }
-
-                        // Format timestamp
-                        String tsReadable;
-                        if (tsiType != 0)
-                        {
-                            long fracNanos;
-
-                            switch (tsfType)
-                            {
-                                case 2:
-                                    // picoseconds → nanoseconds
-                                    fracNanos = tsFractional / 1_000L;
-                                    break;
-
-                                case 1:
-                                    // sample count, not a wall offset
-                                    fracNanos = 0;
-                                    break;
-
-                                default:
-                                    // free-running, not a wall offset
-                                    fracNanos = 0;
-                                    break;
-                            }
-
-                            Instant ts = Instant.ofEpochSecond(tsIntSeconds, fracNanos);
-                            String fracStr;
-
-                            switch (tsfType)
-                            {
-                                case 2:
-                                    fracStr = String.format(" + %d ps", tsFractional % 1_000_000_000_000L);
-                                    break;
-
-                                case 1:
-                                    fracStr = String.format(" + %d samples", tsFractional);
-                                    break;
-
-                                case 3:
-                                    fracStr = String.format(" + %d (free-running)", tsFractional);
-                                    break;
-
-                                default:
-                                    fracStr = "";
-                                    break;
-                            }
-                            tsReadable = TS_FMT.format(ts) + fracStr;
-                        }
-                        else
-                        {
-                            switch (tsfType)
-                            {
-                                case 0:
-                                    tsReadable = "(no timestamp)";
-                                    break;
-
-                                default:
-                                    tsReadable = String.format("(no wall clock) fractional=%d", tsFractional);
-                                    break;
-                            }
-                        }
-                        logger.debug("Timestamp: " + tsReadable);
+                        // time stamp is not correctly sent by flex in dax, daxiq is ok
+                        offset += 12;
 
                         // ---- Packet loss check
                         // The VITA-49 sequence number is only 4 bits wide (bits 19-16 of Word0), so it counts 0–15 and then wraps back to 0. This is defined in the spec
@@ -286,30 +216,34 @@ public class DAX
                         lastSeq = pktSeq;
 
                         int payloadBytes = length - offset;
-                        int samples = payloadBytes / 2;
-                        logger.info(String.format("Payload : length=%d offset=%d payloadBytes=%d samples=%d packetSequence=%d", length, offset, payloadBytes, samples, pktSeq));
+                        int samples = payloadBytes / 8;  // 8 bytes per stereo frame (4 left + 4 right)
+                        logger.debug(String.format("Datagram packet length=%d header=%d payloadBytes=%d samples=%d packetSequence=%d", length, offset, payloadBytes, samples, pktSeq));
+                        // Datagram packet length=1052 header=28 payloadBytes=1024 samples=512 packetSequence=0
 
-                        out = new byte[samples * 2];  // mono output
+                        sb = new StringBuilder("First payload bytes: ");
+                        for (int i = offset; i < offset + 16 && i < length; i++)
+                        {
+                            sb.append(String.format("%02X ", data[i]));
+                        }
+                        logger.debug(sb.toString());
+
+                        out = new byte[samples * 2];
                         int iOut = 0;
                         for (int i = 0; i < samples; i++)
                         {
-                            // https://github.com/ten9876/AetherSDR/blob/main/docs/vita49-format.md
-                            // int16 mono, big-endian -- audioCfg.format = "s16be"
-                            int hi = data[offset++] & 0xFF;
-                            int lo = data[offset++] & 0xFF;
-                            short sample = (short) ((hi << 8) | lo);
-                            //  System.out.println(sample);
+                            // take left channel, discard right (or average them) -- big endian
+                            float left = Float.intBitsToFloat(readInt(data, offset));
+                            float right = Float.intBitsToFloat(readInt(data, offset + 4));
+                            offset += 8;
 
-                            // write as little-endian (Java audio)
-                            out[iOut++] = (byte) (sample & 0xFF);
-                            out[iOut++] = (byte) (sample >> 8);
+                            float sample = (left + right) / 2.0f;  // mix to mono, or just use left
 
+                            sample = Math.max(-1.0f, Math.min(1.0f, sample));
+                            short pcm = (short) (sample * 32767.0f);
+                            out[iOut++] = (byte) (pcm & 0xFF);
+                            out[iOut++] = (byte) ((pcm >> 8) & 0xFF);
                         }
-                        logger.debug("iOut : " + iOut + ", offset : " + offset);
-
                         audioOut.write(out, 0, iOut);
-
-// audioOut.write(data, 0, samples * 4);
                     }
                     else
                     {
