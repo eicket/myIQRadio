@@ -1,4 +1,4 @@
-// Erik Icket, ON4PB - 2023
+// Erik Icket, ON4PB - 2026
 package dsp;
 
 import common.PropertiesWrapper;

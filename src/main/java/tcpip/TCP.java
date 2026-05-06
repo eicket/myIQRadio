@@ -1,3 +1,4 @@
+// Erik Icket, ON4PB - 2026
 package tcpip;
 
 import java.io.BufferedReader;
@@ -25,11 +26,9 @@ public class TCP
         {
             // set timeout for the connect, otherwise javaFX thread blocks ...
             socket = new Socket();
-
             logger.debug("Trying to open TCPIP socket to host : " + host + ", port : " + port);
-
             socket.connect(new InetSocketAddress(host, port), 100);
-            socket.setSoTimeout(5); // timeout for read operation in msecs, timeout is not for connect !
+            socket.setSoTimeout(1); // timeout for read operation in msecs, timeout is not for connect !
 
             in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             out = new PrintWriter(socket.getOutputStream(), true);

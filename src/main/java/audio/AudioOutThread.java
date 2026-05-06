@@ -1,4 +1,4 @@
-// Erik Icket, ON4PB - 2023
+// Erik Icket, ON4PB - 2026
 package audio;
 
 import common.Constants;
@@ -162,5 +162,4 @@ public class AudioOutThread extends Thread
 
         logger.info("AudioOut thread exit, audioOutFromQueue size :  " + lbdAudioOut.size() + ", sample rate : " + rate);
     }
-
 }

@@ -16,6 +16,7 @@ import java.net.SocketTimeoutException;
 import java.time.Instant;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
+import static main.MainController.invertIQ;
 import static main.MainController.lbdDemodulatorInput;
 import static main.MainController.lbdSpectrum;
 import static main.MainController.requestedFrequency;
@@ -279,12 +280,16 @@ public class VITA49InThread extends Thread
                         float iSample = readFloatLE(data, offset);
                         float qSample = readFloatLE(data, offset + 4);
 
-                        // Optional normalization (adjust if needed)                        
-                        float scale = 1.0f / 100.0f;  // tune this
                         if (processIQ)
                         {
-                            processIQ(iSample * scale, qSample * scale);
-                            //processIQ(iSample, qSample);
+                            if (invertIQ)
+                            {
+                                processIQ(qSample * rxGain, iSample * rxGain);
+                            }
+                            else
+                            {
+                                processIQ(iSample * rxGain, qSample * rxGain);
+                            }
                             logger.debug("I: " + iSample + " Q: " + qSample);
                         }
                         offset += 8;
@@ -465,6 +470,8 @@ public class VITA49InThread extends Thread
 
                 complexIn[k] = new Complex(IQIn[k][0], IQIn[k][1]);
             }
+
+            // send to the demodulator for later audio output 
             lbdDemodulatorInput.add(iqDemodulatorIn);
             iIQIn = 0;
 
@@ -487,7 +494,7 @@ public class VITA49InThread extends Thread
             double[] spectrum = new double[FFTSIZE];
             for (int k = 0; k < FFTSIZE; k++)
             {
-                spectrum[k] = rxGain * 10 * Math.log10(Math.pow(swappedComplexOut[k].abs(), 2));
+                spectrum[k] = 10 * Math.log10(Math.pow(swappedComplexOut[k].abs(), 2));
             }
 
             // decimate, so that the linechart is not too large

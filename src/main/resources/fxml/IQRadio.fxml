@@ -34,7 +34,7 @@
             </tooltip>
         </ChoiceBox>
         <Button fx:id="invertButton" cancelButton="true" layoutX="390.0" layoutY="569.0" mnemonicParsing="false" onMouseClicked="#invertButtonClicked" text="Invert I/Q" />
-      <RadioButton fx:id="rxButton" layoutX="1000.0" layoutY="569.0" mnemonicParsing="false" onMouseClicked="#RXButtonClicked" text="RX" />
+        <RadioButton fx:id="rxButton" layoutX="1000.0" layoutY="569.0" mnemonicParsing="false" onMouseClicked="#RXButtonClicked" text="RX" />
         <LineChart fx:id="lineChart" createSymbols="false" layoutX="20.0" layoutY="10.0" legendVisible="false" prefHeight="400.0" prefWidth="1077.0">
             <xAxis>
                 <NumberAxis autoRanging="false" lowerBound="-24000.0" minorTickCount="10" minorTickLength="10.0" prefHeight="40.0" prefWidth="900.0" side="BOTTOM" tickLength="20.0" tickUnit="2000.0" upperBound="24000.0" fx:id="xAxis" />
@@ -64,7 +64,7 @@
                 <Tooltip text="Spectrum smoothing" />
             </tooltip>
         </ChoiceBox>
-        <Slider fx:id="rxGainSlider" blockIncrement="0.001" layoutX="50.0" layoutY="605.0" majorTickUnit="0.1" max="1.0" minorTickCount="1" onValueChange="#rxGainSliderValueChanged" prefHeight="40.0" prefWidth="300.0" showTickLabels="true" showTickMarks="true">
+        <Slider fx:id="rxGainSlider" blockIncrement="0.1" layoutX="50.0" layoutY="605.0" majorTickUnit="0.1" max="1.0" minorTickCount="1" onValueChange="#rxGainSliderValueChanged" prefHeight="40.0" prefWidth="300.0" showTickLabels="true" showTickMarks="true">
             <tooltip>
                 <Tooltip text="Audio in gain" />
             </tooltip>

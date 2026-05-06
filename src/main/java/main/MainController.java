@@ -40,6 +40,7 @@ import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
 import dsp.Demodulator;
 import static common.Constants.NR_OF_SPECTRUM_POINTS;
+import static common.Utils.dumpDouble;
 import static java.lang.Math.round;
 import javafx.scene.control.RadioButton;
 import org.apache.logging.log4j.LogManager;
@@ -53,7 +54,7 @@ public class MainController
 
     PropertiesWrapper propWrapper = new PropertiesWrapper();
 
-    static public boolean invertIQ = true;
+    static public boolean invertIQ = false;
     static public LinkedBlockingDeque<double[]> lbdSpectrum = new LinkedBlockingDeque<>();
     static public LinkedBlockingDeque<int[]> lbdAudioOut = new LinkedBlockingDeque<>();
     static public LinkedBlockingDeque<double[][]> lbdDemodulatorInput = new LinkedBlockingDeque<>();
@@ -152,13 +153,14 @@ public class MainController
         if (event.isPrimaryButtonDown())
         {
             double d = event.getX();
-            // d is between 0 - 1023
-            int fOffset = (int) ((d / 2 - NR_OF_SPECTRUM_POINTS / 2) * waterfallPixelWidthInHz);
-            logger.debug("canvas clicked : " + d + ", f offset : " + fOffset);
+            // d is between 0 - 1023           
+            int offset = (int) ((d - 512) / 512 * sampleRate / 2);
+            logger.debug("canvas clicked : " + offset);
 
-            requestedFrequency = vfo + fOffset;
+            requestedFrequency = vfo + offset;
             setRequestedFrequency = true;
-            logger.info("frequency : " + requestedFrequency);
+            vfo = requestedFrequency;
+            logger.info("new frequency : " + requestedFrequency);
         }
     }
 
@@ -289,12 +291,12 @@ public class MainController
             propWrapper.setProperty("AudioOut", audioOutBox.getValue());
             logger.debug("Audio out : " + audioOutBox.getValue());
 
-            sampleRate = Integer.valueOf(sampleRateBox.getValue());
+            sampleRate = Integer.parseInt(sampleRateBox.getValue());
             binSize = (float) (sampleRate) / FFTSIZE;
             audioDecimationRate = sampleRate / SAMPLE_AUDIO_OUT_RATE;
             waterfallPixelWidthInHz = binSize * SPECTRUM_DECIMATION_FACTOR;
             lbdSpectrum.clear();
-            
+
             lbdDemodulatorInput.clear();
             demodulatorThread = new Demodulator(sampleRate, audioDecimationRate);
             demodulatorThread.start();
@@ -360,7 +362,7 @@ public class MainController
         }
         else
         {
-            invertButton.setStyle("-fx-background-color: NavajoWhite");
+            invertButton.setStyle("");
         }
     }
 
@@ -371,8 +373,11 @@ public class MainController
     @FXML
     private void rxGainSliderValueChanged(ObservableValue<Number> ovn, Number before, Number after)
     {
-        logger.debug(before + " " + after);
+
         rxGain = (double) after;
+
+        logger.info("before : " + before + ", after : " + after);
+        dumpDouble(rxGain);
     }
 
     @FXML
@@ -410,20 +415,20 @@ public class MainController
         volumeSlider.setValue(0.5);
         volume = (float) volumeSlider.getValue();
 
-        rxGainSlider.setValue(1);
+        rxGainSlider.setValue(0.1);
         rxGain = (float) rxGainSlider.getValue();
 
         ListAudioOutDevices.ListAudioOut(audioOutBox);
 
         sampleRateBox.getItems().addAll("24000", "48000", "96000", "192000");
-        sampleRateBox.setValue("96000");
+        sampleRateBox.setValue("48000");
         audioDecimationRate = sampleRate / SAMPLE_AUDIO_OUT_RATE;
 
         modeBox.getItems().addAll("LSB", "USB", "FM", "AM");
         // setValue() will trigger displayFilter();
         modeBox.setValue("USB");
 
-        sampleRate = Integer.valueOf(sampleRateBox.getValue());
+        sampleRate = Integer.parseInt(sampleRateBox.getValue());
         binSize = (float) (sampleRate) / FFTSIZE;
         waterfallPixelWidthInHz = binSize * SPECTRUM_DECIMATION_FACTOR;
 
@@ -447,7 +452,7 @@ public class MainController
                     logger.debug("New spectrum out with length : " + spectrum.length + ", queue depth : " + lbdSpectrum.size());
 
                     // average the spectrum in time
-                    int nrOfAveragingSpectrumLines = Integer.valueOf(averageBox.getValue());
+                    int nrOfAveragingSpectrumLines = Integer.parseInt(averageBox.getValue());
                     // remove head of the queue if capacity is reached
                     spectrumList.add(spectrum);
                     while (spectrumList.size() > nrOfAveragingSpectrumLines)

@@ -1,3 +1,4 @@
+// Erik Icket, ON4PB - 2026
 package headless;
 
 import common.Constants;
@@ -10,8 +11,6 @@ import java.math.BigDecimal;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.SocketTimeoutException;
-import java.time.ZoneOffset;
-import java.time.format.DateTimeFormatter;
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.DataLine;
@@ -114,7 +113,7 @@ public class DAX
             }
         }
 
-        logger.info("VITA49InThread is started");
+        logger.info("start completed");
 
         run();
     }
@@ -231,7 +230,6 @@ public class DAX
                         int iOut = 0;
                         for (int i = 0; i < samples; i++)
                         {
-                            // take left channel, discard right (or average them) -- big endian
                             float left = Float.intBitsToFloat(readInt(data, offset));
                             float right = Float.intBitsToFloat(readInt(data, offset + 4));
                             offset += 8;
@@ -379,23 +377,5 @@ public class DAX
                 | ((d[o + 1] & 0xFF) << 16)
                 | ((d[o + 2] & 0xFF) << 8)
                 | (d[o + 3] & 0xFF);
-    }
-
-    private short readShortLE(byte[] d, int o)
-    {
-        return (short) (((d[o + 1] & 0xFF) << 8) | (d[o] & 0xFF));
-    }
-
-    private float readFloatLE(byte[] data, int offset)
-    {
-        int bits = (data[offset] & 0xFF)
-                | ((data[offset + 1] & 0xFF) << 8)
-                | ((data[offset + 2] & 0xFF) << 16)
-                | ((data[offset + 3] & 0xFF) << 24);
-
-        return Float.intBitsToFloat(bits);
-    }
-    int iIQIn = 0;
-    double[][] IQIn = new double[FFTSIZE][2];
-
+    }  
 }
