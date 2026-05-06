@@ -40,8 +40,8 @@ The line spectrum graph can finally be smoothed by accumulating up to 20 spectra
 ## Headless operation
 
 This repository also contains two main classes to demo a minimal implementation without GUI.
-The headless.DAXIQ demonstrates a minimal implementation for receiving a baseband VITA49 IQ packet stream.
-The headless.DAX demonstrates how to receive an audio VITA49 stream at a fixed 24000 samples per sec rate from a slice receiver.
+The headless.DAXIQ class demonstrates a minimal implementation for receiving a baseband VITA49 IQ packet stream.
+The headless.DAX class demonstrates how to receive an audio VITA49 stream at a fixed 24000 samples per sec rate from a slice receiver.
 
 ## Filter display utility 
 
