@@ -1,12 +1,10 @@
 # myIQRadio
 
-Experimental Software Defined Radio (SDR) client which reads the IQ samples from a Flex Radio VITA49 stream and plays back the decoded audio (in mono) on the audio out device.
-No audio devices are used for reading the sampled IQ stream. The DAX control panel is completely bypassed, and can be left closed.
-The IQ sampling can be done at 24000, 48000, 96000 or 192000 samples per second and samples are carried as 32-bit float little-endian interleaved I/Q pairs.
+Experimental Software Defined Radio (SDR) client which reads the IQ samples from a Flex Radio VITA49 UDP stream and plays back the decoded audio (in mono) on the audio out device.
+No audio devices are used for reading the sampled IQ stream. The Flex Radio DAX control panel is completely bypassed, and can be left closed.
+The IQ sampling can be done at 24000, 48000, 96000 or 192000 samples per second and baseband samples are carried as 32-bit float little-endian interleaved I/Q pairs.
 
 When using with a Flex Radio, select a pan adapter, and attach DAX IQ channel 1 to it.
-
-This is a pure Java implementation, and can easily be rebuilt in any regular Java development environment.
 
 Some interesting features :
 
@@ -15,6 +13,8 @@ Some interesting features :
 - Variable 100 .. 10000 Hz filter width
 - Variable spectrum smoothing
 - VFO control to a Flex Radio via TCP/IP
+
+This is a pure Java implementation, and can easily be built with any recent Java development environment.
 
 ![Alt text](/screenshots/main.jpg)
 
@@ -36,6 +36,12 @@ For AM and FM, the signals are calculated directly after the decimation.
 The incoming IQ samples also go through a Fast Fourier Transform with a FFT size of 4096.
 A further decimation of 8, produces a 512 point spectrum graph and waterfall.
 The line spectrum graph can finally be smoothed by accumulating up to 20 spectral lines, before being displayed on the line chart.
+
+## Headless operation
+
+This repository also contains two main classes to demo a minimal implementation without GUI.
+The headless.DAXIQ demonstrates a minimal implementation for receiving a baseband VITA49 IQ packet stream.
+The headless.DAX demonstrates how to receive an audio VITA49 stream at a fixed 24000 samples per sec rate from a slice receiver.
 
 ## Filter display utility 
 
